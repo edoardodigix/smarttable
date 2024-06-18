@@ -44,32 +44,34 @@
 					</fb:FilterGroupItem>
 				</fb:filterGroupItems>
 			</fb:FilterBar>
-			<t:Table 
-				id="table"
-				rows="{
-					path: '/CatalogoFrutta'
-				}"
-			>
+			<t:Table id="table" rows="{/CatalogoFrutta}" >
+				<t:extension>
+					<OverflowToolbar>
+						<Title text="Frutta" />
+						<ToolbarSpacer />
+						<Button icon="sap-icon://action-settings" press="openColumnSelection"/>
+					</OverflowToolbar>
+				</t:extension>
 				<t:columns>
-				<t:Column>
+					<t:Column id="id-col">
 						<Label text="ID" />
 						<t:template>
 							<Text text="{ID}" />
 						</t:template>
 					</t:Column>
-					<t:Column>
+					<t:Column id="nome-col">
 						<Label text="Nome" />
 						<t:template>
 							<Text text="{Nome}" />
 						</t:template>
 					</t:Column>
-					<t:Column>
+					<t:Column id="origine-col">
 						<Label text="Origine" />
 						<t:template>
 							<Text text="{Origine}" />
 						</t:template>
 					</t:Column>
-					<t:Column>
+					<t:Column id="scadenza-col">
 						<Label text="Scadenza" />
 						<t:template>
 							<Text text="{path: 'Scadenza', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}" />

@@ -1,0 +1,82 @@
+<mvc:View controllerName="edotests.controller.View1"
+    height="100%"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:core="sap.ui.core"
+		xmlns="sap.m"
+		xmlns:f="sap.f"
+		xmlns:fb="sap.ui.comp.filterbar"
+		xmlns:svm="sap.ui.comp.smartvariants"
+		xmlns:t="sap.ui.table">
+    <Page title="App Title" showHeader="false">
+        <content>
+			<fb:FilterBar id="filterbar" useToolbar="false" search=".onSearch">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem name="Nome" label="Nome" groupName="MultiComboBox" visibleInFilterBar="true">
+						<fb:control>
+							<MultiComboBox
+								name="Nome"
+								items="{
+									path: '/NomiFrutta',
+									templateShareable: true
+								}"
+							>
+								<core:Item key="{key}" text="{name}"/>
+							</MultiComboBox>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem name="Origine" label="Origine" groupName="MultiComboBox" visibleInFilterBar="true">
+						<fb:control>
+							<MultiComboBox
+								name="Origine"
+								items="{
+									path: '/NomiOrigini',
+									templateShareable: true
+								}"
+							>
+								<core:Item key="{key}" text="{name}"/>
+							</MultiComboBox>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem name="Scadenza" label="Scadenza" groupName="DateRangeSelection" visibleInFilterBar="true">
+						<fb:control>
+							<DateRangeSelection name="Scadenza" displayFormat="dd/MM/yyyy" placeholder=" " />
+						</fb:control>
+					</fb:FilterGroupItem>
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+			<t:Table 
+				id="table"
+				rows="{
+					path: '/CatalogoFrutta'
+				}"
+			>
+				<t:columns>
+				<t:Column>
+						<Label text="ID" />
+						<t:template>
+							<Text text="{ID}" />
+						</t:template>
+					</t:Column>
+					<t:Column>
+						<Label text="Nome" />
+						<t:template>
+							<Text text="{Nome}" />
+						</t:template>
+					</t:Column>
+					<t:Column>
+						<Label text="Origine" />
+						<t:template>
+							<Text text="{Origine}" />
+						</t:template>
+					</t:Column>
+					<t:Column>
+						<Label text="Scadenza" />
+						<t:template>
+							<Text text="{path: 'Scadenza', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}" />
+						</t:template>
+					</t:Column>
+				</t:columns>
+			</t:Table>
+        </content>
+    </Page>
+</mvc:View>

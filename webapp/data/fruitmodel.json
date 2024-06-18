@@ -1,0 +1,80 @@
+{
+    "CatalogoFrutta": [
+        {
+            "ID": "1",
+            "Nome": "Mela",
+            "Scadenza": "2024-06-25",
+            "Origine": "Italia"
+        }, 
+        {
+            "ID": "2",
+            "Nome": "Pera",
+            "Scadenza": "2024-07-02",
+            "Origine": "Francia"
+        },
+        {
+            "ID": "3",
+            "Nome": "Banana",
+            "Scadenza": "2024-07-05",
+            "Origine": "Marocco"
+        },
+        {
+            "ID": "4",
+            "Nome": "Pesca",
+            "Scadenza": "2024-06-28",
+            "Origine": "Italia"
+        },
+        {
+            "ID": "5",
+            "Nome": "Mela",
+            "Scadenza": "2024-06-22",
+            "Origine": "Italia"
+        },
+        {
+            "ID": "6",
+            "Nome": "Ananas",
+            "Scadenza": "2024-06-27",
+            "Origine": "Perù"
+        }
+    ],
+    "NomiFrutta": [
+        {
+            "key": "Mela",
+            "name": "Mela"
+        },
+        {
+            "key": "Pera",
+            "name": "Pera"
+        },
+        {
+            "key": "Banana",
+            "name": "Banana"
+        },
+        {
+            "key": "Pesca",
+            "name": "Pesca"
+        },
+        {
+            "key": "Ananas",
+            "name": "Ananas"
+        }
+    ],
+    "NomiOrigini": [
+        {
+            "key": "Italia",
+            "name": "Italia"
+        },
+        {
+            "key": "Francia",
+            "name": "Francia"
+        },
+        {
+            "key": "Marocco",
+            "name": "Marocco"
+        },
+        {
+            "key": "Perù",
+            "name": "Perù"
+        }
+    ]
+}

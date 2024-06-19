@@ -8,10 +8,12 @@ sap.ui.define([
 	'sap/m/p13n/SelectionController',
 	'sap/m/p13n/SortController',
 	'sap/m/p13n/GroupController',
-	'sap/m/table/ColumnWidthController'
+	'sap/m/table/ColumnWidthController',
+	'sap/ui/core/library',
+	'sap/ui/model/Sorter'
 
 ],
-function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, SelectionController, SortController, GroupController, ColumnWidthController) {
+function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, SelectionController, SortController, GroupController, ColumnWidthController, CoreLibrary, Sorter) {
     "use strict";
 
     return Controller.extend("edotests.controller.View1", {
@@ -25,6 +27,10 @@ function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, 
 			this.oFilterBar = this.getView().byId("filterbar");
 			this.oTable = this.getView().byId("table");
 
+			this._registerForP13n();
+		},
+
+		_registerForP13n: function () {
 			this.oMetadataHelper = new MetadataHelper([{
 					key: "id-col",
 					label: "ID",
@@ -46,13 +52,6 @@ function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, 
 					path: "Scadenza"
 				}
 			]);
-
-			this._mIntialWidth = {
-				"firstName_col": "11rem",
-				"lastName_col": "11rem",
-				"city_col": "11rem",
-				"size_col": "11rem"
-			};
 
 			Engine.getInstance().register(this.oTable, {
 				helper: this.oMetadataHelper,
@@ -77,7 +76,7 @@ function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, 
 		},
 
 		handleStateChange: function(oEvt) {
-			const oTable = this.byId("persoTable");
+			const oTable = this.byId("table");
 			const oState = oEvt.getParameter("state");
 
 			if (!oState) {
@@ -89,7 +88,7 @@ function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, 
 				const sKey = this._getKey(oColumn);
 				const sColumnWidth = oState.ColumnWidth[sKey];
 
-				oColumn.setWidth(sColumnWidth || this._mIntialWidth[sKey]);
+				oColumn.setWidth(sColumnWidth);
 
 				oColumn.setVisible(false);
 				oColumn.setSortOrder(CoreLibrary.SortOrder.None);
@@ -160,6 +159,68 @@ function(Controller, JSONModel, Filter, FilterOperator, Engine, MetadataHelper, 
 				contentHeight: "35rem",
 				contentWidth: "32rem",
 				source: oEvt.getSource()
+			});
+		},
+
+		_getKey: function(oControl) {
+			return this.getView().getLocalId(oControl.getId());
+		},
+
+		onSort: function(oEvt) {
+			const oTable = this.byId("table");
+			const sAffectedProperty = this._getKey(oEvt.getParameter("column"));
+			const sSortOrder = oEvt.getParameter("sortOrder");
+
+			//Apply the state programatically on sorting through the column menu
+			//1) Retrieve the current personalization state
+			Engine.getInstance().retrieveState(oTable).then(function(oState) {
+
+				//2) Modify the existing personalization state --> clear all sorters before
+				oState.Sorter.forEach(function(oSorter) {
+					oSorter.sorted = false;
+				});
+				oState.Sorter.push({
+					key: sAffectedProperty,
+					descending: sSortOrder === CoreLibrary.SortOrder.Descending
+				});
+
+				//3) Apply the modified personalization state to persist it in the VariantManagement
+				Engine.getInstance().applyState(oTable, oState);
+			});
+		},
+
+		onColumnMove: function(oEvt) {
+			const oTable = this.byId("table");
+			const oAffectedColumn = oEvt.getParameter("column");
+			const iNewPos = oEvt.getParameter("newPos");
+			const sKey = this._getKey(oAffectedColumn);
+			oEvt.preventDefault();
+
+			Engine.getInstance().retrieveState(oTable).then(function(oState) {
+
+				const oCol = oState.Columns.find(function(oColumn) {
+					return oColumn.key === sKey;
+				}) || {
+					key: sKey
+				};
+				oCol.position = iNewPos;
+
+				Engine.getInstance().applyState(oTable, {
+					Columns: [oCol]
+				});
+			});
+		},
+
+		onColumnResize: function(oEvt) {
+			const oColumn = oEvt.getParameter("column");
+			const sWidth = oEvt.getParameter("width");
+			const oTable = this.byId("table");
+
+			const oColumnState = {};
+			oColumnState[this._getKey(oColumn)] = sWidth;
+
+			Engine.getInstance().applyState(oTable, {
+				ColumnWidth: oColumnState
 			});
 		}
 	});
